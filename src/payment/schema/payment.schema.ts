@@ -16,7 +16,7 @@ export class PaymentSchema extends Model<PaymentSchema> {
   @Column
   card_number: string;
   @Column
-  subscribe_date: string;
+  subscribe_date: Date;
   @Column
   code: number;
   @Column

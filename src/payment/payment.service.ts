@@ -41,7 +41,7 @@ export class PaymentService {
           type: paymentCreateDto.type,
           platform: paymentCreateDto.platform,
           code: paymentCreateDto.code,
-          subscribe_date: paymentCreateDto.type,
+          // subscribe_date: paymentCreateDto.type,
           email: paymentCreateDto.email,
         };
         await this.paymentSchema.create(data);
