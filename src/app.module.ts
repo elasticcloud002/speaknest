@@ -18,6 +18,7 @@ import { TokenAuthorizationMiddleware } from './middleware/tokenAuthorization.mi
 import { PaymentModule } from './payment/payment.module';
 import { MailModule } from './mail/mail.module';
 import { paymentProviders } from './payment/payment.providers';
+import { PaymentService } from './payment/payment.service';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { paymentProviders } from './payment/payment.providers';
     MailModule,
     ScheduleModule.forRoot(),
   ],
-  providers: [...usersProviders, ...paymentProviders],
+  providers: [...usersProviders, ...paymentProviders, PaymentService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

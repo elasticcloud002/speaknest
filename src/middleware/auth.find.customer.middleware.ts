@@ -3,11 +3,13 @@ import { NextFunction, Request, Response } from 'express';
 import { CustomerSchema } from '../customer/schema/customer.schema';
 import * as http from 'node:http';
 import { PaymentSchema } from 'src/payment/schema/payment.schema';
+import { PaymentService } from 'src/payment/payment.service';
 @Injectable()
 export class AuthFindCustomerMiddleware implements NestMiddleware {
   constructor(
     @Inject('Customer') private readonly customerSchema: typeof CustomerSchema,
     @Inject('Payment') private readonly paymentSchema: typeof PaymentSchema,
+    private readonly paymentService: PaymentService,
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
@@ -28,9 +30,7 @@ export class AuthFindCustomerMiddleware implements NestMiddleware {
       subscribe_date.setDate(subscribe_date.getDate() + 30);
       const dateNow = Date.now();
       if (subscribe_date < (dateNow as unknown as Date)) {
-        const customerData = customer;
-        req.body.customer = customerData;
-        return next();
+        await this.paymentService.cancelPayment({ email: customer.email });
       }
       customerData = {
         ...customer,
