@@ -8,5 +8,6 @@ import { paymentProviders } from '../payment/payment.providers';
 @Module({
   providers: [CustomerService, ...usersProviders],
   controllers: [CustomerController],
+  exports: [CustomerService, ...usersProviders],
 })
 export class CustomerModule {}

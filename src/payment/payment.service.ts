@@ -6,6 +6,7 @@ import { Op } from 'sequelize';
 import * as process from 'process';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import * as moment from 'moment';
+import { CustomerSchema } from 'src/customer/schema/customer.schema';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 
@@ -23,6 +24,7 @@ function generateCode() {
 export class PaymentService {
   constructor(
     @Inject('Payment') private readonly paymentSchema: typeof PaymentSchema,
+    @Inject('Customer') private readonly customerSchema: typeof CustomerSchema,
     private mailService: MailService,
   ) {}
 
@@ -45,6 +47,24 @@ export class PaymentService {
           email: paymentCreateDto.email,
         };
         await this.paymentSchema.create(data);
+        const customer = await this.customerSchema.findOne({
+          where: { email: paymentCreateDto.email },
+        });
+        let customerData: any = {};
+        const payment = await this.paymentSchema.findOne({
+          where: { email: customer.email },
+        });
+        if (payment) {
+          const dateString = payment.subscribe_date;
+          const subscribe_date = new Date(dateString);
+          subscribe_date.setDate(subscribe_date.getDate() + 30);
+          customerData = {
+            ...customer,
+            card_id: payment.card_id,
+            subscribe_date: subscribe_date.toUTCString().toString(),
+          };
+        }
+        return customerData;
       } else {
         const customer = await stripe.customers.create({
           email: paymentCreateDto.email,
