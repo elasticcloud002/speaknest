@@ -26,6 +26,12 @@ export class AuthFindCustomerMiddleware implements NestMiddleware {
       const dateString = payment.subscribe_date;
       const subscribe_date = new Date(dateString);
       subscribe_date.setDate(subscribe_date.getDate() + 30);
+      const dateNow = Date.now();
+      if (subscribe_date < (dateNow as unknown as Date)) {
+        const customerData = customer;
+        req.body.customer = customerData;
+        return next();
+      }
       customerData = {
         ...customer,
         card_id: payment.card_id,
