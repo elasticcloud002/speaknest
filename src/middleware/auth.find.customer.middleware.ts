@@ -26,11 +26,13 @@ export class AuthFindCustomerMiddleware implements NestMiddleware {
     let customerData: any = {};
     if (payment) {
       const dateString = payment.subscribe_date;
-      const subscribe_date = new Date(dateString);
+      let subscribe_date = new Date(dateString);
       subscribe_date.setDate(subscribe_date.getDate() + 30);
       const dateNow = Date.now();
       if (subscribe_date < (dateNow as unknown as Date)) {
         await this.paymentService.cancelPayment({ email: customer.email });
+
+        subscribe_date = null;
       }
       customerData = {
         ...customer,
