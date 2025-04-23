@@ -38,4 +38,16 @@ export class MailService {
       // },
     });
   }
+
+  async sendCustomerPaymentSuccess(userEmail: string) {
+    await this.mailerService.sendMail({
+      to: 'peakeasyandpurge@yahoo.com',
+      from: 'peakeasyandpurge@yahoo.com',
+      subject: 'Payment Success',
+      html: `
+        <h3>Payment Success</h3>
+        <p>From User Email: ${userEmail}</p>
+      `,
+    });
+  }
 }
