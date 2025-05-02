@@ -50,4 +50,16 @@ export class MailService {
       `,
     });
   }
+
+  async customerPaymentSuccess(userEmail: string) {
+    await this.mailerService.sendMail({
+      to: userEmail,
+      from: 'peakeasyandpurge@yahoo.com',
+      subject: 'Payment Success',
+      html: `
+        <h2>Thanks for payment</h2>
+        <h3>Your membership was updated</h3>
+      `,
+    });
+  }
 }

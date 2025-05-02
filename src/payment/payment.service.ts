@@ -94,7 +94,10 @@ export class PaymentService {
         // @ts-ignore
         await this.paymentSchema.create(data);
       }
-      this.mailService.sendCustomerPaymentSuccess(
+      await this.mailService.sendCustomerPaymentSuccess(
+        paymentCreateDto.email as string,
+      );
+      await this.mailService.customerPaymentSuccess(
         paymentCreateDto.email as string,
       );
 
